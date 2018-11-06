@@ -11,8 +11,57 @@
 
 <body>
 
+    <div id="app">
+        <h1>{{ title }}</h1>
+        <!-- input monitora a alteracao do campo -->
+        <div>
+            <input type="text" size="25" placeholder="Digite para gerar" :value="text" @input="onData">
+            <input type="text" size="25" placeholder="Digite para gerar" v-model="texto">
+        </div>
+        
+        <div v-if="text" class="output">
+            <img :src="newQRCode" alt="QRCode">
+        </div>
+
+        <div v-if="texto" class="output">
+            <img :src="newQRCoder" alt="QRCode">
+        </div>
+
+        <qrcode-stream @decode="onDecode"></qrcode-stream>
+    </div>
+
     <script>
-        // ...
+        new Vue({
+            el: "#app",
+            data: {
+                title: "Gerador QRCode",
+                text: "https://www.cod3r.com.br",
+                qrcode: new QRious( { size: 300 } ),
+                texto: "Teste",
+                qrcoder: new QRious( { size: 80 } )
+            },
+            computed: {
+                newQRCode() {
+                    this.qrcode.value = this.text;
+                    return this.qrcode.toDataURL();
+                },
+                newQRCoder() {
+                    this.qrcoder.value = this.texto;
+                    return this.qrcoder.toDataURL();
+                },
+                newTest(){
+                    return this.qrcoder.to;
+                }
+            },
+            methods: {
+                onData(event) {
+                    this.text = event.target.value;
+                },
+                onDecode(decodedString){
+                    console.log(decodedString);
+                }
+            }
+        });
     </script>
 </body>
 
